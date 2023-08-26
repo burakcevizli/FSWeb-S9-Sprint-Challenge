@@ -55,6 +55,8 @@ export default function AppFunctional(props) {
 
     setCounter(0)
     setDegisenIndex(initialIndex)
+    setErrorMessage("")
+    setEmail("")
     /*
     TODO
     Mail için tekrar dön.
@@ -70,18 +72,33 @@ export default function AppFunctional(props) {
     if (yon === "left" && (degisenIndex == 1 || degisenIndex == 2 || degisenIndex == 4 || degisenIndex == 5 || degisenIndex == 7 || degisenIndex == 8)) {
       setDegisenIndex(degisenIndex - 1)
       setCounter(counter + 1)
+      setErrorMessage("")
+    }else if(yon ==="left"){
+      setErrorMessage("Sola gidemezsiniz")
     }
+
     if (yon === "right" && (degisenIndex == 0 || degisenIndex == 1 || degisenIndex == 3 || degisenIndex == 4 || degisenIndex == 6 || degisenIndex == 7)) {
       setDegisenIndex(degisenIndex + 1)
       setCounter(counter + 1)
+      setErrorMessage("")
+    }else if(yon ==="right"){
+      setErrorMessage("Sağa gidemezsiniz")
     }
+
     if (yon === "up" && (degisenIndex == 3 || degisenIndex == 4 || degisenIndex == 5 || degisenIndex == 6 || degisenIndex == 7 || degisenIndex == 8)) {
       setDegisenIndex(degisenIndex - 3)
       setCounter(counter + 1)
+      setErrorMessage("")
+    }else if(yon ==="up"){
+      setErrorMessage("Yukarıya gidemezsiniz")
     }
+    
     if (yon === "down" && (degisenIndex < 6)) {
       setDegisenIndex(degisenIndex + 3)
       setCounter(counter + 1)
+      setErrorMessage("")
+    }else if(yon ==="down"){
+      setErrorMessage("Aşağıya gidemezsiniz")
     }
   }
 
@@ -96,7 +113,9 @@ export default function AppFunctional(props) {
     evt.preventDefault()
     axios.post('http://localhost:9000/api/result', postObject)
       .then(function (response) {
-        console.log(response);
+        console.log(response)
+        setErrorMessage(response.data.message);
+        setEmail("")
       })
       .catch(function (error) {
         console.log(error.response.data.message)
@@ -124,13 +143,13 @@ export default function AppFunctional(props) {
       </div>
       <div id="keypad">
         <button onClick={() => sonrakiIndex("left")} id="left">SOL</button>
-        <button onClick={() => sonrakiIndex("up")} id="up">YUKARI</button>
+        <button onClick={() => sonrakiIndex("up")} id="up" data-testid = "yukarı">YUKARI</button>
         <button onClick={() => sonrakiIndex("right")} id="right">SAĞ</button>
         <button onClick={() => sonrakiIndex("down")} id="down">AŞAĞI</button>
         <button onClick={reset} id="reset">reset</button>
       </div>
       <form>
-        <input onChange={onChange} id="email" type="email" placeholder="email girin"></input>
+        <input onChange={onChange} value={email} id="email" type="email" placeholder="email girin"></input>
         <input onClick={onSubmit} id="submit" type="submit"></input>
       </form>
     </div>
