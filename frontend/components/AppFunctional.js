@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // önerilen başlangıç stateleri
 const initialMessage = ''
@@ -10,25 +10,63 @@ export default function AppFunctional(props) {
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
+  const [degisenIndex,setDegisenIndex] = useState(initialIndex)
+  const [counter , setCounter] = useState(0)
+
   function getXY() {
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
     // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
+    
+     const xyArray = [(1, 1), (2, 1), (3, 1),(1, 2) ,(2, 2) ,(3, 2), (1, 3), (2, 3) ,(3, 3)] 
+    let XY = (2,2);
+      for(let i = 0; i< xyArray.length; i++){
+        if(degisenIndex == i){
+          XY = xyArray[i]
+        }
+      }
+      return XY
   }
 
   function getXYMesaj() {
     // Kullanıcı için "Koordinatlar (2, 2)" mesajını izlemek için bir state'in olması gerekli değildir.
     // Koordinatları almak için yukarıdaki "getXY" helperını ve ardından "getXYMesaj"ı kullanabilirsiniz.
-    // tamamen oluşturulmuş stringi döndürür.
+    // tamamen oluşturulmuş stringi döndürür.i
+
+    let messageKordinat = `Koordinatlar ${getXY()}`
+    let messageMove = `${counter} kez ilerlediniz.`
+
+    return (messageKordinat,messageMove)
+    
   }
 
   function reset() {
     // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
+
+    setCounter(0)
+    setDegisenIndex(initialIndex)
+    /*
+    TODO
+    Mail için tekrar dön.
+    
+    */ 
   }
 
   function sonrakiIndex(yon) {
     // Bu helper bir yön ("sol", "yukarı", vb.) alır ve "B" nin bir sonraki indeksinin ne olduğunu hesaplar.
     // Gridin kenarına ulaşıldığında başka gidecek yer olmadığı için,
     // şu anki indeksi değiştirmemeli.
+
+    if(yon.target.id === "left" && degisenIndex == 1 || 2 || 4 || 5 || 7 || 8) {
+        setDegisenIndex(degisenIndex-1)
+    }
+    if(yon.target.id === "right" && degisenIndex == 0 || 1 || 3 || 4 || 6 || 7) {
+      setDegisenIndex(degisenIndex+1)
+  }
+  if(yon.target.id === "up" && degisenIndex == 0 || 1 || 3 || 4 || 6 || 7) {
+    setDegisenIndex(degisenIndex+1)
+}
+
+
   }
 
   function ilerle(evt) {
