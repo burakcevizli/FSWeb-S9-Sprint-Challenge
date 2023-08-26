@@ -16,8 +16,8 @@ export default function AppFunctional(props) {
   const [email, setEmail] = useState(initialEmail)
   const [postObject , setPostObject] = useState({
     "Email" : initialEmail,
-    "X" : xDeger,
-    "Y" : yDeger,
+    "X" : 2,
+    "Y" : 2,
   })
 
   let xDeger;
