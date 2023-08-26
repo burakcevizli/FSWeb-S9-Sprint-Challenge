@@ -14,17 +14,14 @@ export default function AppFunctional(props) {
   const [degisenIndex, setDegisenIndex] = useState(initialIndex)
   const [counter, setCounter] = useState(initialSteps)
   const [email, setEmail] = useState(initialEmail)
-  const [postObject , setPostObject] = useState({
-    "Email" : initialEmail,
-    "X" : 2,
-    "Y" : 2,
-  })
+  const [errorMessage,setErrorMessage] = useState(initialMessage)
 
-  let xDeger;
-  let yDeger;
-  let abcArray = [];
-
-  
+  const postObject = {
+    "email": email,
+    "x": (degisenIndex + 1) % 3 == 0 ? 3 : (degisenIndex + 1) % 3,
+    "y": degisenIndex < 3 ? 1 : degisenIndex < 6 ? 2 : degisenIndex < 9 ? 3 : false,
+    "steps" : counter
+  }
 
   function getXY() {
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
@@ -38,18 +35,7 @@ export default function AppFunctional(props) {
       }
 
     }
-    let XY;
-    for (let i = 0; i < xyArray.length; i++) {
-      if (degisenIndex == i) {
-        XY = xyArray[i]
-
-        abcArray = xyArray[i]?.split("")
-        xDeger = abcArray[0];
-        yDeger = abcArray[2];
-      }
-    }
-
-    return XY
+    return xyArray[degisenIndex]
   }
 
   function getXYMesaj() {
@@ -106,18 +92,16 @@ export default function AppFunctional(props) {
 
   function onSubmit(evt) {
     // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
+    
     evt.preventDefault()
-    console.log(postObject)
-    // axios.post('http://localhost:9000/api/result', {
-    //   firstName: 'Fred',
-    //   lastName: 'Flintstone'
-    // })
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+    axios.post('http://localhost:9000/api/result', postObject)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error.response.data.message)
+        setErrorMessage(error.response.data.message)
+      });
   }
 
   return (
@@ -136,7 +120,7 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{errorMessage}</h3>
       </div>
       <div id="keypad">
         <button onClick={() => sonrakiIndex("left")} id="left">SOL</button>
