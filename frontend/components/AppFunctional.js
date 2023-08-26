@@ -14,19 +14,22 @@ export default function AppFunctional(props) {
   const [degisenIndex, setDegisenIndex] = useState(initialIndex)
   const [counter, setCounter] = useState(initialSteps)
   const [email, setEmail] = useState(initialEmail)
-  const [xDEGER, setXDeger] = useState(2)
-  const [yDEGER, setYDeger] = useState(2)
+  const [postObject , setPostObject] = useState({
+    "Email" : initialEmail,
+    "X" : xDeger,
+    "Y" : yDeger,
+  })
 
+  let xDeger;
+  let yDeger;
+  let abcArray = [];
 
-  const postObject = {
-
-    "X": xDEGER,
-    "Y": yDEGER
-  }
   
+
   function getXY() {
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
     // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
+
 
     const xyArray = []
     for (let y = 1; y < 4; y++) {
@@ -39,11 +42,13 @@ export default function AppFunctional(props) {
     for (let i = 0; i < xyArray.length; i++) {
       if (degisenIndex == i) {
         XY = xyArray[i]
+
+        abcArray = xyArray[i]?.split("")
+        xDeger = abcArray[0];
+        yDeger = abcArray[2];
       }
-      const abcArray = XY?.split("")
-      abcArray ? setXDeger(()=>(abcArray[1])) : setXDeger(2)
-      abcArray ? setYDeger(()=>(abcArray[3])) : setYDeger(2)
     }
+
     return XY
   }
 
@@ -101,17 +106,18 @@ export default function AppFunctional(props) {
 
   function onSubmit(evt) {
     // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
-
-    axios.post('http://localhost:9000/api/result', {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    evt.preventDefault()
+    console.log(postObject)
+    // axios.post('http://localhost:9000/api/result', {
+    //   firstName: 'Fred',
+    //   lastName: 'Flintstone'
+    // })
+    //   .then(function (response) {
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   }
 
   return (
@@ -141,7 +147,7 @@ export default function AppFunctional(props) {
       </div>
       <form>
         <input onChange={onChange} id="email" type="email" placeholder="email girin"></input>
-        <input id="submit" type="submit"></input>
+        <input onClick={onSubmit} id="submit" type="submit"></input>
       </form>
     </div>
   )
