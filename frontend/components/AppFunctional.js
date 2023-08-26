@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 
 // önerilen başlangıç stateleri
@@ -10,21 +11,40 @@ export default function AppFunctional(props) {
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
-  const [degisenIndex,setDegisenIndex] = useState(initialIndex)
-  const [counter , setCounter] = useState(0)
+  const [degisenIndex, setDegisenIndex] = useState(initialIndex)
+  const [counter, setCounter] = useState(initialSteps)
+  const [email, setEmail] = useState(initialEmail)
+  const [xDEGER, setXDeger] = useState(2)
+  const [yDEGER, setYDeger] = useState(2)
 
+
+  const postObject = {
+
+    "X": xDEGER,
+    "Y": yDEGER
+  }
+  
   function getXY() {
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
     // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
-    
-     const xyArray = [(1, 1), (2, 1), (3, 1),(1, 2) ,(2, 2) ,(3, 2), (1, 3), (2, 3) ,(3, 3)] 
-    let XY = (2,2);
-      for(let i = 0; i< xyArray.length; i++){
-        if(degisenIndex == i){
-          XY = xyArray[i]
-        }
+
+    const xyArray = []
+    for (let y = 1; y < 4; y++) {
+      for (let x = 1; x < 4; x++) {
+        xyArray.push(`(${x},${y})`)
       }
-      return XY
+
+    }
+    let XY;
+    for (let i = 0; i < xyArray.length; i++) {
+      if (degisenIndex == i) {
+        XY = xyArray[i]
+      }
+      const abcArray = XY?.split("")
+      abcArray ? setXDeger(()=>(abcArray[1])) : setXDeger(2)
+      abcArray ? setYDeger(()=>(abcArray[3])) : setYDeger(2)
+    }
+    return XY
   }
 
   function getXYMesaj() {
@@ -32,11 +52,11 @@ export default function AppFunctional(props) {
     // Koordinatları almak için yukarıdaki "getXY" helperını ve ardından "getXYMesaj"ı kullanabilirsiniz.
     // tamamen oluşturulmuş stringi döndürür.i
 
-    let messageKordinat = `Koordinatlar ${getXY()}`
-    let messageMove = `${counter} kez ilerlediniz.`
+    // let messageKordinat = `Koordinatlar ${getXY()}`
+    // let messageMove = `${counter} kez ilerlediniz.`
 
-    return (messageKordinat,messageMove)
-    
+    // return (messageKordinat, messageMove)
+
   }
 
   function reset() {
@@ -48,7 +68,7 @@ export default function AppFunctional(props) {
     TODO
     Mail için tekrar dön.
     
-    */ 
+    */
   }
 
   function sonrakiIndex(yon) {
@@ -56,43 +76,55 @@ export default function AppFunctional(props) {
     // Gridin kenarına ulaşıldığında başka gidecek yer olmadığı için,
     // şu anki indeksi değiştirmemeli.
 
-    if(yon.target.id === "left" && degisenIndex == 1 || 2 || 4 || 5 || 7 || 8) {
-        setDegisenIndex(degisenIndex-1)
+    if (yon === "left" && (degisenIndex == 1 || degisenIndex == 2 || degisenIndex == 4 || degisenIndex == 5 || degisenIndex == 7 || degisenIndex == 8)) {
+      setDegisenIndex(degisenIndex - 1)
+      setCounter(counter + 1)
     }
-    if(yon.target.id === "right" && degisenIndex == 0 || 1 || 3 || 4 || 6 || 7) {
-      setDegisenIndex(degisenIndex+1)
-  }
-  if(yon.target.id === "up" && degisenIndex == 0 || 1 || 3 || 4 || 6 || 7) {
-    setDegisenIndex(degisenIndex+1)
-}
-
-
-  }
-
-  function ilerle(evt) {
-    // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
-    // ve buna göre state i değiştirir.
+    if (yon === "right" && (degisenIndex == 0 || degisenIndex == 1 || degisenIndex == 3 || degisenIndex == 4 || degisenIndex == 6 || degisenIndex == 7)) {
+      setDegisenIndex(degisenIndex + 1)
+      setCounter(counter + 1)
+    }
+    if (yon === "up" && (degisenIndex == 3 || degisenIndex == 4 || degisenIndex == 5 || degisenIndex == 6 || degisenIndex == 7 || degisenIndex == 8)) {
+      setDegisenIndex(degisenIndex - 3)
+      setCounter(counter + 1)
+    }
+    if (yon === "down" && (degisenIndex < 6)) {
+      setDegisenIndex(degisenIndex + 3)
+      setCounter(counter + 1)
+    }
   }
 
   function onChange(evt) {
     // inputun değerini güncellemek için bunu kullanabilirsiniz
+    setEmail(evt.target.value)
   }
 
   function onSubmit(evt) {
     // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
+
+    axios.post('http://localhost:9000/api/result', {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Koordinatlar (2, 2)</h3>
-        <h3 id="steps">0 kere ilerlediniz</h3>
+        <h3 id="coordinates">Koordinatlar {getXY()}</h3>
+        <h3 id="steps">{counter} kere ilerlediniz</h3>
       </div>
       <div id="grid">
         {
           [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === 4 ? ' active' : ''}`}>
-              {idx === 4 ? 'B' : null}
+            <div key={idx} className={`square${idx === degisenIndex ? ' active' : ''}`}>
+              {idx === degisenIndex ? 'B' : null}
             </div>
           ))
         }
@@ -101,14 +133,14 @@ export default function AppFunctional(props) {
         <h3 id="message"></h3>
       </div>
       <div id="keypad">
-        <button id="left">SOL</button>
-        <button id="up">YUKARI</button>
-        <button id="right">SAĞ</button>
-        <button id="down">AŞAĞI</button>
-        <button id="reset">reset</button>
+        <button onClick={() => sonrakiIndex("left")} id="left">SOL</button>
+        <button onClick={() => sonrakiIndex("up")} id="up">YUKARI</button>
+        <button onClick={() => sonrakiIndex("right")} id="right">SAĞ</button>
+        <button onClick={() => sonrakiIndex("down")} id="down">AŞAĞI</button>
+        <button onClick={reset} id="reset">reset</button>
       </div>
       <form>
-        <input id="email" type="email" placeholder="email girin"></input>
+        <input onChange={onChange} id="email" type="email" placeholder="email girin"></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
