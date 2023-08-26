@@ -12,5 +12,7 @@ test('sanity', async () => {
   userEvent.click(upButton);
   userEvent.click(upButton);
 
-  expect(screen.getByText("Yukarıya gidemezsiniz")).toBeInTheDocument();
+  const errorMessage = screen.getByText(/Yukarıya gidemezsiniz/i)
+
+  expect(screen.getByText(errorMessage)).toBeInTheDocument();
 });
