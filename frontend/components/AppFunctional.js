@@ -139,17 +139,17 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message">{errorMessage}</h3>
+        <h3 data-testid = "message" id="message">{errorMessage}</h3>
       </div>
       <div id="keypad">
-        <button onClick={() => sonrakiIndex("left")} id="left">SOL</button>
+        <button onClick={() => sonrakiIndex("left")} id="left" data-testid = "sol">SOL</button>
         <button onClick={() => sonrakiIndex("up")} id="up" data-testid = "yukarı">YUKARI</button>
-        <button onClick={() => sonrakiIndex("right")} id="right">SAĞ</button>
-        <button onClick={() => sonrakiIndex("down")} id="down">AŞAĞI</button>
+        <button onClick={() => sonrakiIndex("right")} id="right" data-testid = "sağ">SAĞ</button>
+        <button onClick={() => sonrakiIndex("down")} id="down" data-testid = "aşağı">AŞAĞI</button>
         <button onClick={reset} id="reset">reset</button>
       </div>
       <form>
-        <input onChange={onChange} value={email} id="email" type="email" placeholder="email girin"></input>
+        <input onChange={onChange} value={email} id="email" type="email" placeholder="email girin" data-testid = "emailInput"></input>
         <input onClick={onSubmit} id="submit" type="submit"></input>
       </form>
     </div>
